@@ -1,0 +1,1 @@
+{"version":"0.1.0","name":"todo","dependencies":{"core-js":{"version":"3.29.1"},"firebase-tools":{"version":"11.25.2"},"firebase":{"version":"9.18.0"},"vue-router":{"version":"4.1.6"},"vue":{"version":"3.2.47"},"vuex":{"version":"4.1.0"}}}

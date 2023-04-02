@@ -1,14 +1,10 @@
 import { createStore } from 'vuex'
+import userAuth from './modules/userAuth'
 
-export default createStore({
-  state: {
-  },
-  getters: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
+const store = createStore({
   modules: {
-  }
+    userAuth,
+  },
 })
+
+export default store

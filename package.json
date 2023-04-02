@@ -10,6 +10,10 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "firebase": "^9.18.0",
+    "firebase-tools": "^11.25.2",
+    "primeicons": "^6.0.1",
+    "primevue": "^3.26.1",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0"
