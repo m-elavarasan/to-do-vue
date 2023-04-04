@@ -1,31 +1,25 @@
 <template>
-  <div class="main">
-    <div class="header">
-    </div>
-  </div>
+  <HeaderComp />
+  <DragListComp/>
 </template>
 
 <script>
-import Button from 'primevue/button'
+import HeaderComp from '@/components/HeaderComp.vue'
+import DragListComp from '@/components/DragListComp.vue';
 export default {
   components: {
-    Button
+    HeaderComp,
+    DragListComp
   },
-  methods: {
-    handleLogout() {
-      this.$store.dispatch('LOGOUT', {
-        onSuccess: () => {
-          this.$router.push({ name: 'login' })
-          
-        },
-        onFail: (error) => {
-          console.log(error)
-        }
-      })
+  data(){
+    return {
     }
-  }
+  },
 }
 </script>
-<style scoped>
-
+<style lang="scss" scoped>
+.p-menubar {
+  background-color: #f1f1f1;
+  border-bottom: 1px solid #ffffff;
+}
 </style>
