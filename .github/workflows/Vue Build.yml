@@ -1,0 +1,31 @@
+name: Vue Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Build Vue code
+        run: |
+          npm run build
+
+      - name: Check build status
+        run: |
+          if [ $? -eq 0 ]
+          then
+            echo "Build successful"
+          else
+            echo "Build failed"
+            exit 1
+          fi
