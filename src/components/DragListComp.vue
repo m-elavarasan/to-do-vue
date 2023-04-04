@@ -1,71 +1,70 @@
 <template>
     <div class="container-title">
-        <h1>Drag and Drop </h1>
-
+      <h1>Drag and Drop </h1>
     </div>
     <div class="container">
-
-        <div class="container_one">
-            <span>
-                <h2>Created</h2>
-            </span>
-            <div v-if="tasks.filter(task => task.status === 'created').length === 0" class="container_info">
-                <span class="pi pi-plus"> Create New Task</span>
-            </div>
-            <div v-else class="container_task">
-                <div v-for="task in tasks.filter(task => task.status === 'created')" :key="task.id">
-                    <Card class="container_card">
-                        <template #header>
-                            <span class="container_card_title">{{ task.title }}</span>
-                        </template>
-                        <template #content>
-                            <span class="container_card_body">{{ task.description }}</span>
-                        </template>
-                    </Card>
-                </div>
-            </div>
+      <div class="container_one" @dragover.prevent @drop="onDrop('created')">
+        <span>
+          <h2>Created</h2>
+        </span>
+        <div v-if="tasks.filter(task => task.status === 'created').length === 0" class="container_info">
+          <span class="pi pi-plus"> Create New Task</span>
         </div>
-        <div class="container_two">
-            <span>
-                <h2>Started</h2>
-            </span>
-            <div v-if="tasks.filter(task => task.status === 'started').length === 0" class="container_info">                <span class="pi pi-angle-double-right"> Drag to Start</span>
-            </div>
-            <div v-else class="container_task">
-                <div v-for="task in tasks.filter(task => task.status === 'started')" :key="task.id">
-                    <Card class="container_card">
-                        <template #header>
-                            <span class="container_card_title">{{ task.title }}</span>
-                        </template>
-                        <template #content>
-                            <span class="container_card_body">{{ task.description }}</span>
-                        </template>
-                    </Card>
-                </div>
-            </div>
+        <div v-else class="container_task">
+          <div v-for="task in tasks.filter(task => task.status === 'created')" :key="task.id">
+            <Card class="container_card" @dragstart="onDragStart(task)">
+              <template #header>
+                <span class="container_card_title">{{ task.title }}</span>
+              </template>
+              <template #content>
+                <span class="container_card_body">{{ task.description }}</span>
+              </template>
+            </Card>
+          </div>
         </div>
-        <div class="container_three">
-            <span>
-                <h2>Completed</h2>
-            </span>
-            <div v-if="tasks.filter(task => task.status === 'completed').length === 0" class="container_info">                <span class="pi pi-angle-double-right"> Drag to Complete </span>
-            </div>
-            <div v-else class="container_task">
-                <div v-for="task in tasks.filter(task => task.status === 'completed')" :key="task.id">
-                    <Card class="container_card">
-                        <template #header>
-                            <span class="container_card_title">{{ task.title }}</span>
-                        </template>
-                        <template #content>
-                            <span class="container_card_body">{{ task.description }}</span>
-                        </template>
-                    </Card>
-                </div>
-            </div>
+      </div>
+      <div class="container_two" @dragover.prevent @drop="onDrop('started')">
+        <span>
+          <h2>Started</h2>
+        </span>
+        <div v-if="tasks.filter(task => task.status === 'started').length === 0" class="container_info"> <span
+            class="pi pi-angle-double-right"> Drag to Start</span>
         </div>
+        <div v-else class="container_task">
+          <div v-for="task in tasks.filter(task => task.status === 'started')" :key="task.id">
+            <Card class="container_card" @dragstart="onDragStart(task)">
+              <template #header>
+                <span class="container_card_title">{{ task.title }}</span>
+              </template>
+              <template #content>
+                <span class="container_card_body">{{ task.description }}</span>
+              </template>
+            </Card>
+          </div>
+        </div>
+      </div>
+      <div class="container_three" @dragover.prevent @drop="onDrop('completed')">
+        <span>
+          <h2>Completed</h2>
+        </span>
+        <div v-if="tasks.filter(task => task.status === 'completed').length === 0" class="container_info"> <span
+            class="pi pi-angle-double-right"> Drag to Complete </span>
+        </div>
+        <div v-else class="container_task">
+          <div v-for="task in tasks.filter(task => task.status === 'completed')" :key="task.id">
+            <Card class="container_card" @dragstart="onDragStart(task)">
+              <template #header>
+                <span class="container_card_title">{{ task.title }}</span>
+              </template>
+              <template #content>
+                <span class="container_card_body">{{ task.description }}</span>
+              </template>
+            </Card>
+          </div>
+        </div>
+      </div>
     </div>
-</template>
-
+  </template>
 <script>
 import Card from 'primevue/card';
 export default {
@@ -126,6 +125,16 @@ export default {
 
 
             ],
+        }
+    },
+    methods: {
+        onDragOne(event) {
+            console.log(event);
+        },
+        onDragStart(task) {
+            event.dataTransfer.setData('text/plain', JSON.stringify(task));
+            console.log(event);
+
         }
     }
 }
