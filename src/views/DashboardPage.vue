@@ -5,7 +5,7 @@
 
 <script>
 import HeaderComp from '@/components/HeaderComp.vue'
-import DragListComp from '@/components/DragListComp.vue';
+import DragListComp from '@/components/ListComp.vue';
 export default {
   components: {
     HeaderComp,

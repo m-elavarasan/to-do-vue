@@ -1,11 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/DashboardPage.vue'
-
+import ToDo from '../views/ToDo.vue'
 const routes = [
   {
     path: '/',
     name: 'home',
     component: HomeView,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/demo',
+    name: 'demo',
+    component: ToDo,
     meta: {
       requiresAuth: true
     }
