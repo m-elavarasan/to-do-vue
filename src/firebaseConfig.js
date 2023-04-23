@@ -4,5 +4,9 @@ export default {
   projectId: "to-do-56cfb",
   storageBucket: "to-do-56cfb.appspot.com",
   messagingSenderId: "939897301984",
-  appId: "1:939897301984:web:03ca36525f104068de9985"
+  appId: "1:939897301984:web:03ca36525f104068de9985",
+  firestore: {
+    timestampsInSnapshots: true, 
+    cacheSizeBytes: 1000000,
+  }
 };
