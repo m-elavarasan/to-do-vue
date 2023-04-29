@@ -10,12 +10,16 @@ export default {
   async getData(collectionName) {
     try {
       const snapshot = await getDocs(collection(firestore, collectionName));
-      console.log(snapshot);
-      return snapshot.docs.map(doc => doc.data());
+      return snapshot.docs.map(doc => {
+        const data = doc.data();
+        data.id = doc.id;
+        return data;
+      });
     } catch (error) {
       console.error("Error getting data from Firestore:", error);
     }
   },
+  
   async postData(collectionName, data) {
     try {
       await addDoc(collection(firestore, collectionName), data);

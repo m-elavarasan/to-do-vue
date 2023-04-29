@@ -1,8 +1,5 @@
 <template>
   <router-view/>
-  <n-message-provider>
-  <content />
-</n-message-provider>
 </template>
 
 <style lang="scss">
