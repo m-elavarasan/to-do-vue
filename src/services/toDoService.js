@@ -23,7 +23,6 @@ export default {
   async postData(collectionName, data) {
     try {
       await addDoc(collection(firestore, collectionName), data);
-      console.log("Data posted successfully!");
     } catch (error) {
       console.error("Error posting data to Firestore:", error);
     }
@@ -32,7 +31,6 @@ export default {
     try {
       const docRef = doc(firestore, collectionName, docId);
       await updateDoc(docRef, data);
-      console.log("Data updated successfully!");
     } catch (error) {
       console.error("Error updating data in Firestore:", error);
     }

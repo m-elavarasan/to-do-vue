@@ -6,29 +6,29 @@
     <div class="container_one" @dragover.prevent @drop="onDrop('created')">
       <span><h2>Created</h2></span>
       <div v-if="this.getTasks?.filter(task => task.status === 'created').length === 0" class="container_info">
-        <Button icon="pi pi-plus" label="Create New" @click="visible = true" />
+        <Button icon="pi pi-plus" label="Create New" @click="showModal = true" />
       </div>
       <div v-else class="container_task">
         <div class="card-list">
           <Card v-for="task in this.getTasks?.filter(task => task.status === 'created')" :key="task.id"
             :title="task.title" :description="task.description" :status="task.status" @dragstart="onDragStart(task)"
-            draggable="true" />
+            draggable="true" :class="getStatusClass(task.status)" />
         </div>
       </div>
 
     </div>
-    <div class="container_two" @dragover.prevent @drop="onDrop('started')">
+    <div class="container_two" @dragover.prevent @drop="onDrop('inprogress')">
       <span>
-        <h2>Started</h2>
+        <h2>In Progress</h2>
       </span>
-      <div v-if="this.getTasks?.filter(task => task.status === 'started').length === 0" class="container_info">
+      <div v-if="this.getTasks?.filter(task => task.status === 'inprogress').length === 0" class="container_info">
         <span class="pi pi-angle-double-right"> Drag to Start</span>
       </div>
       <div v-else class="container_task">
         <div class="card-list">
-          <Card v-for="task in this.getTasks?.filter(task => task.status === 'started')" :key="task.id"
+          <Card v-for="task in this.getTasks?.filter(task => task.status === 'inprogress')" :key="task.id"
             :title="task.title" :description="task.description" :status="task.status" @dragstart="onDragStart(task)"
-            draggable="true" />
+            draggable="true" :class="getStatusClass(task.status)" />
         </div>
       </div>
     </div>
@@ -43,59 +43,31 @@
         <div class="card-list">
           <Card v-for="task in this.getTasks?.filter(task => task.status === 'completed')" :key="task.id"
             :title="task.title" :description="task.description" :status="task.status" @dragstart="onDragStart(task)"
-            draggable="true" />
+            draggable="true" :class="getStatusClass(task.status)" />
         </div>
       </div>
     </div>
-    <Dialog v-model:visible="visible" header="Create New" :style="{ width: '50vw' }">
-      <div class="p-fluid">
-        <div class="p-field p-grid">
-          <label for="title" class="p-col-fixed p-mb-2">Title</label>
-          <div class="p-col">
-            <InputText id="title" v-model="tasks.title" />
-          </div>
-        </div>
-        <div class="p-field p-grid">
-          <label for="description" class="p-col-fixed p-mt-2">Description</label>
-          <div class="p-col">
-            <InputText id="description" v-model="tasks.description" />
-          </div>
-        </div>
-      </div>
-      <div class="p-dialog-footer">
-        <Button label="Create" icon="pi pi-check" @click="handleCreate" />
-        <Button label="Cancel" icon="pi pi-times" class="p-button-secondary" @click="handleCancel" />
-      </div>
-    </Dialog>
+    <CreateTasksVue :show-modal="showModal" @update:show-modal="showModal = $event"/>
   </div>
 </template>
 
 <script>
 import Card from '../components/CardComp.vue';
 import Button from 'primevue/button';
-import Dialog from 'primevue/dialog';
-import InputText from 'primevue/inputtext';
 import { mapActions, mapGetters } from 'vuex';
 import firestoreService from "@/services/toDoService";
+import CreateTasksVue from './CreateTasks.vue';
 
 export default {
   data() {
     return {
-      tasks:
-      {
-        id:"",
-        title: "",
-        description: "",
-        status: "created",
-      },
       draggedTask: null,
-      visible: false,
+      showModal: false,
     };
   },
   components: {
     Card,
-    Dialog,
-    InputText,
+    CreateTasksVue,
     Button
   },
   mounted() {
@@ -103,11 +75,8 @@ export default {
   },
   computed: {
     ...mapGetters(['getTasks']),
-    isValid(){
-      if(this.tasks.title === "" && this.tasks.description === ""){
-          return false;
-        }
-      return true;
+    userData(){
+      return JSON.parse(localStorage.getItem("user"));
     }
   },
   methods: {
@@ -115,49 +84,30 @@ export default {
     onDragStart(task) {
       this.draggedTask = task;
     },
-    handleCreate() {
-      this.onCreateTasks(this.tasks)
-
-    },
-    handleCancel() {
-      this.resetTasks()
-      this.visible = false;
-    },
-    resetTasks() {
-      this.tasks.title = "",
-        this.tasks.description = ""
-    },
-    async onCreateTasks(tasks) {
-      if (this.isValid) {
-        await firestoreService.postData("tasks", tasks)
-          .then(() => {
-            this.fetchTasks();
-            console.log("Task updated successfully!");
-            this.resetTasks()
-            this.visible = false;
-          })
-          .catch(error => {
-            console.error("Error updating task in Firestore:", error);
-          });
-      }
-      else{
-        console.error("Invalid Input");
-      }
-    },
     async onDrop(status) {
       if (this.draggedTask) {
         this.draggedTask.status = status;
         await firestoreService.updateData("tasks", this.draggedTask.id, this.draggedTask)
           .then(() => {
             this.draggedTask = null;
-            console.log("Task updated successfully!");
 
           })
           .catch(error => {
             console.error("Error updating task in Firestore:", error);
           });
       }
-    }
+    },
+    getStatusClass(status) {
+      if (status === 'created') {
+        return 'card-created'
+      } else if (status === 'inprogress') {
+        return 'card-in-progress'
+      } else if (status === 'completed') {
+        return 'card-completed'
+      } else {
+        return ''
+      }
+    },
   }
 };
 </script>
@@ -232,10 +182,23 @@ export default {
     overflow: hidden;
   }
 }
-
-.p-dialog-footer {
-  margin-top: 5%;
-  display: flex;
-  justify-content: center;
+.card-created {
+  background: #f3a6836b;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
 }
+
+.card-in-progress {
+  background: #63ccda7c;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.card-completed {
+  background: #cf6a8786;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+
 </style>

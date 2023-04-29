@@ -5,30 +5,29 @@
         </div>
         <div class="header-container_menu">
             <div class="header-container_menu_item">
-                <a href="#">Home</a>
+                <a @click="showModal = true">Create New</a>
             </div>
-            <div class="header-container_menu_item">
-                <a href="#">About</a>
-            </div>
-            <!-- <div class="header-container_menu_item">
-                <a href="#">Contact</a>
-            </div> -->
         </div>
         <div class="header-container_avatar">
             <Dropdown dropdownIcon="pi pi-user" v-model="selectedValue" :options="user_menu" optionLabel="label" :placeholder="user.email" @change="handleChanges"></Dropdown>
         </div>
 </div>
+<CreateTasksVue :show-modal="showModal" @update:show-modal="showModal = $event"/>
 </template>
 
 <script>
 import Dropdown from 'primevue/dropdown';
+import CreateTasksVue from './CreateTasks.vue';
+
 export default {
     name: "HeaderComp",
     components: {
-        Dropdown
+        Dropdown,
+        CreateTasksVue,
     },
     data() {
         return {
+            showModal: false,
             selectedValue: "",
             user: {},
             user_menu: [
